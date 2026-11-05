@@ -1,116 +1,246 @@
-# Many-to-many Object Relationships Lab
+# Many-to-Many Object Relationships Lab
 
-Now that we have learned about several types of relationships it's time to build 
-one of our own. In this lab you will be creating a many-to many relationship in 
-python 
+A Python object-oriented programming project that models a many-to-many relationship between authors and books using contracts as an intermediary.
 
-## The Scenario 
+An author can have many books, and a book can have many authors. The `Contract` class connects the two models.
 
-We are tasked with building a model to aid in building contracts for books with 
-multiple authors. As a part of this model we need to create an Author model, a Book 
-model and a Contract model. Authors can have many books through contracts, and books 
-can have many authors through contacts.
+## Relationship Model
 
-## Tools & Resources 
-- [Github Repo](https://github.com/learn-co-curriculum/python-oo-many-to-many-book-contracts-lab)
-- [Python classes](https://docs.python.org/3/tutorial/classes.html)
+```text
+Author ↔ Contract ↔ Book
+```
 
-## Instructions
+The `Contract` class acts as the join model.
 
-### Task 1: Define the Problem
+Each contract stores:
 
-Build a model a many to many relationship between Books and Authors:
+- An author
+- A book
+- A contract date
+- A royalty amount
 
-* Build Book class
-* Build Author class
-* Build Contract class
-* Build connecting methods between all
+## Features
 
-### Task 2: Determine the Design
+The project supports:
 
-#### Book:
-* Attributes:
-  * title (string)
-  * all (array) 
-* Methods:
-  * contracts()
-  * authors()
+- Creating authors
+- Creating books
+- Creating contracts
+- Tracking all authors
+- Tracking all books
+- Tracking all contracts
+- Finding an author's contracts
+- Finding an author's books
+- Finding a book's contracts
+- Finding a book's authors
+- Signing new contracts
+- Calculating an author's total royalties
+- Finding contracts by date
+- Validating contract attributes
 
-#### Authors:
-* Attributes:
-  * name (string)
-  * all (array)
-* Methods:
-  * contracts()
-  * books()
-  * sign_contracts(book,date,royalties)
-  * total_royalties()
+## Book Class
 
-#### Contracts:
-* Attributes:
-  * author (Author class), 
-  * book (Book class), 
-  * date (string), 
-  * royalties (integer)
-  * all (array)
-* Methods:
-  * contracts_by_date()
+Each `Book` object stores a title.
 
-### Task 3: Develop, Test, and Refine the Code
+The class also keeps track of all created books using:
 
-#### Step 1: Create feature branch
+```python
+Book.all
+```
 
-#### Step 2: Create Book class
+### `contracts()`
 
-* `__init__`: title
-* Class attributes- all
-* Methods:
-  * contracts()- This method should return a list of related contracts
-  * authors()- This method should return a list of related authors using the Contract class as an intermediary
+Returns all contracts associated with a specific book.
 
-#### Step 3: Authors
+### `authors()`
 
-* `__init__`: name (string)
-* Class attributes- all
-* Methods:
-  * contracts()- This method should return a list of related contracts
-  * books()- This method should return a list of related books using the Contract class as an intermediary
-  * sign_contracts(book,date,royalties)- This method should create and return a new Contract object between the author and the specified book with the specified date and royalties
-  * total_royalties()- This method should return the total amount of royalties that the author has earned from all of their contracts
+Returns all authors associated with the book through its contracts.
 
-#### Step 4: Contracts
+Example:
 
-* `__init__`:
-  * author
-  * book
-  * date 
-  * royalties 
-* Class attributes: all
-* Properties: All properties should raise an exception if not valid
-  * author: Is an instance of Author class
-  * book:  Is an instance of Book class
-  * date: Is an instance of a str
-  * royalties:  Is an instance of an int
-* Class Methods: contracts_by_date()- This method should return all contracts that have the same date as the date passed into the method
+```python
+book = Book("Example Book")
+author = Author("Example Author")
 
-#### Step 6: Push feature branch and open a PR on GitHub
+Contract(author, book, "01/01/2001", 50000)
 
-#### Step 7: Merge to main
+print(book.authors())
+```
 
-### Task 4: Document and Maintain
+## Author Class
 
-Best Practice documentation steps:
-* Add comments to the code to explain purpose and logic, clarifying intent and functionality of your code to other developers.
-* Update README text to reflect the functionality of the application following https://makeareadme.com. 
-  * Add screenshot of completed work included in Markdown in README.
-* Delete any stale branches on GitHub
-* Remove unnecessary/commented out code
-* If needed, update git ignore to remove sensitive data
+Each `Author` object stores a name.
 
-## Important Submission Note
+The class also keeps track of all created authors using:
 
-Before you submit your solution, you need to save your progress with git.
+```python
+Author.all
+```
 
-* Add your changes to the staging area by executing git add .
-* Create a commit by executing git commit -m "Your commit message"
-* Push your commits to GitHub by executing git push origin main
+### `contracts()`
+
+Returns all contracts belonging to the author.
+
+### `books()`
+
+Returns all books connected to the author through contracts.
+
+### `sign_contract(book, date, royalties)`
+
+Creates and returns a new `Contract`.
+
+Example:
+
+```python
+author = Author("Example Author")
+book = Book("Example Book")
+
+contract = author.sign_contract(
+    book,
+    "01/01/2001",
+    60000
+)
+```
+
+### `total_royalties()`
+
+Returns the sum of all royalties from the author's contracts.
+
+Example:
+
+```python
+author.total_royalties()
+```
+
+## Contract Class
+
+A `Contract` connects an `Author` and a `Book`.
+
+Each contract stores:
+
+- `author`
+- `book`
+- `date`
+- `royalties`
+
+All contracts are stored in:
+
+```python
+Contract.all
+```
+
+## Validation
+
+Contract properties are validated before being stored.
+
+### Author
+
+Must be an instance of the `Author` class.
+
+### Book
+
+Must be an instance of the `Book` class.
+
+### Date
+
+Must be a string.
+
+### Royalties
+
+Must be an integer.
+
+Invalid values raise an exception.
+
+## `contracts_by_date()`
+
+Returns all contracts matching a specified date.
+
+Example:
+
+```python
+Contract.contracts_by_date("01/01/2001")
+```
+
+## Many-to-Many Relationships
+
+The relationship works through the `Contract` class.
+
+For example, `Author.books()` does not store books directly.
+
+Instead, it:
+
+```text
+Finds the author's contracts
+        ↓
+Gets the book from each contract
+        ↓
+Returns those books
+```
+
+The same relationship works in reverse for `Book.authors()`.
+
+## Technologies
+
+- Python 3.8.13
+- Pytest
+- Pipenv
+- Git
+- GitHub
+
+## Setup
+
+Clone the repository:
+
+```bash
+git clone git@github.com:Abraham-z14/python-oo-many-to-many-book-contracts-lab.git
+cd python-oo-many-to-many-book-contracts-lab
+```
+
+Install the environment:
+
+```bash
+pipenv --python ~/.pyenv/versions/3.8.13/bin/python install
+```
+
+Enter the virtual environment:
+
+```bash
+pipenv shell
+```
+
+## Testing
+
+Run the automated test suite:
+
+```bash
+pytest
+```
+
+Current result:
+
+```text
+14 passed
+```
+
+## Completed Test Suite
+
+![Completed test suite](images/tests-passing.png)
+
+## Project Structure
+
+```text
+python-oo-many-to-many-book-contracts-lab/
+├── images/
+│   └── tests-passing.png
+├── lib/
+│   ├── many_to_many.py
+│   └── testing/
+├── Pipfile
+├── Pipfile.lock
+├── pytest.ini
+└── README.md
+```
+
+## Author
+
+Abraham Zarate
